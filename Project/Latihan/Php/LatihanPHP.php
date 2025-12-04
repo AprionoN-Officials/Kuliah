@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Form KHS Mahasiswa</title>
+    <title>Form KHS Mahasiswa by apriono</title>
 </head>
 <body>
 
