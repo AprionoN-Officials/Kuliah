@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — Sederhana</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#fff;
+      --accent:#2b7cff;
+      --muted:#6b7280;
+      --radius:12px;
+      --glass: rgba(255,255,255,0.6);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#eef6ff 0%,var(--bg) 100%);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.08);
+      width:100%;
+      max-width:420px;
+    }
+
+    h1{margin:0 0 8px;font-size:1.25rem}
+    p.lead{margin:0 0 18px;color:var(--muted)}
+
+    label{display:block;font-size:0.85rem;margin-bottom:6px;color:#111827}
+    input[type="text"], input[type="password"], input[type="email"]{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e6eefb;
+      background:#fbfdff;
+      margin-bottom:12px;
+      font-size:0.95rem;
+    }
+
+    .actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+    .btn{
+      background:var(--accent);
+      color:white;
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow:0 6px 20px rgba(43,124,255,0.18);
+      text-decoration:none;
+    }
+    .btn.secondary{background:transparent;color:var(--muted);box-shadow:none;border:1px solid #eef3fb}
+
+    .footer{margin-top:16px;text-align:center;color:var(--muted);font-size:0.9rem}
+    .muted-link{color:var(--accent);text-decoration:none;font-weight:600;cursor:pointer}
+
+    .row{display:flex;align-items:center;gap:8px}
+    .checkbox{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.95rem}
+
+    @media (max-width:480px){   
+      .card{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <header style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6c8cff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">S</div>
+      <div>
+        <h1>Masuk ke Sederhana</h1>
+        <p class="lead">Masukkan kredensial Anda untuk melanjutkan.</p>
+      </div>
+    </header>
+
+    <form id="loginForm" novalidate>
+      <div>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="contoh@domain.com" required />
+      </div>
+
+      <div>
+        <label for="password">Kata Sandi</label>
+        <input id="password" name="password" type="password" placeholder="Masukkan kata sandi" required />
+      </div>
+
+      <div class="row" style="justify-content:space-between;">
+        <label class="checkbox"><input type="checkbox" id="remember" /> Ingat saya</label>
+        <a href="#" id="forgotLink" class="muted-link">Lupa kata sandi?</a>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">Masuk</button>
+        <a id="backLink" href="/project/t1/" class="btn secondary" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;">Kembali</a>
+      </div>
+    </form>
+
+    <div class="footer">
+      Belum punya akun? <a href="#" id="signupLink" class="muted-link">Daftar sekarang</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Safe initialization to avoid errors if elements are missing
+      function safe(id) { return document.getElementById(id); }
+
+      var form = safe('loginForm');
+      var emailInput = safe('email');
+      var pwdInput = safe('password');
+      var remember = safe('remember');
+      var forgot = safe('forgotLink');
+      var signup = safe('signupLink');
+      var back = safe('backLink');
+
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          try {
+            var email = emailInput ? emailInput.value.trim() : '';
+            var pwd = pwdInput ? pwdInput.value : '';
+            var rememberChecked = remember ? remember.checked : false;
+
+            if (!email || !pwd) {
+              alert('Mohon masukkan email dan kata sandi.');
+              return;
+            }
+
+            // Demo behavior: log and show alert
+            console.log('Login attempt:', { email: email, remember: rememberChecked });
+            alert('Tombol masuk ditekan (demo).\nEmail: ' + email + '\nIngat: ' + (rememberChecked ? 'Ya' : 'Tidak'));
+
+            // Example: simulate success navigation after a short delay (uncomment to enable)
+            // setTimeout(function(){ location.href = 'dashboard.html'; }, 600);
+          } catch (err) {
+            console.error('Login handler error', err);
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+          }
+        });
+      }
+
+      if (forgot) {
+        forgot.addEventListener('click', function (e) {
+          e.preventDefault();
+          try {
+            // Demo placeholder
+            alert('Fitur lupa kata sandi (demo). Link pemulihan akan dikirim ke email Anda jika terdaftar.');
+          } catch (err) {
+            console.error('Forgot handler error', err);
+          }
+        });
+      }
+
+      if (signup) {
+        signup.addEventListener('click', function (e) {
+          e.preventDefault();
+          try {
+            // Demo placeholder
+            alert('Fitur pendaftaran (demo). Mengarahkan ke halaman pendaftaran.');
+            // Example navigation: location.href = 'register.html';
+          } catch (err) {
+            console.error('Signup handler error', err);
+          }
+        });
+      }
+
+      if (back) {
+        back.addEventListener('click', function (e) {
+          e.preventDefault();
+          try {
+            var href = back.getAttribute('href');
+            if (href) {
+              // navigate to the href destination
+              location.href = href;
+            } else {
+              alert('Tidak ada tujuan kembali.');
+            }
+          } catch (err) {
+            console.error('Back handler error', err);
+            alert('Tidak dapat kembali saat ini.');
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

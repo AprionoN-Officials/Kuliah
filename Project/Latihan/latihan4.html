@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Pendaftaran</title>
+</head>
+<body>
+    <form action="latihan4.html" method="post">
+        <table align="center" width="40%" style=" background-color: #f5e6d3; border: 0px solid #999;">
+            <tr>
+                <td colspan="3" align="center" style="background-color: #f5e6d3; color: #000000; padding: 15px;">
+                    Form Pendaftaran
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3; width: 50;">Nama Lengkap</td>
+                <td style="padding: 5px; background-color: #f5e6d3; width: 10px;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="text" name="nama" style="padding: 1px; border: 1px solid #666; width: 200px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Username</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="text" name="username" style="padding: 2px; border: 1px solid #666; width: 200px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Password</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="password" name="password" style="padding: 2px; border: 1px solid #666; width: 200px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Birthdate</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="date" name="birthdate" style="padding: 2px; border: 1px solid #666; width: 130px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Email</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="email" name="email" style="padding: 2px; border: 1px solid #666; width: 200px;">
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Jenis Kelamin</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="radio" name="gender" value="laki-laki" id="laki"> <label for="laki">Laki-Laki</label>
+                    <input type="radio" name="gender" value="perempuan" id="perempuan" style="margin-left: 15px;"> <label for="perempuan">Perempuan</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px; background-color: #f5e6d3;">Hobby</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">:</td>
+                <td style="padding: 5px; background-color: #f5e6d3;">
+                    <input type="checkbox" name="hobby[]" value="sport" id="sport"> <label for="sport">Sport</label>
+                    <input type="checkbox" name="hobby[]" value="hiking" id="hiking" style="margin-left: 10px;"> <label for="hiking">Hiking</label>
+                    <input type="checkbox" name="hobby[]" value="reading" id="reading" style="margin-left: 10px;"> <label for="reading">Reading</label>
+                    <input type="checkbox" name="hobby[]" value="traveling" id="traveling" style="margin-left: 10px;"> <label for="traveling">Traveling</label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" align="center" style="padding: 15px; background-color: #f5e6d3;">
+                    <input type="submit" value="Submit" style="padding: 4px 12px; background-color: #e6e6fa; border: 1px solid #999; cursor: pointer; margin-right: 8px;">
+                    <input type="reset" value="Reset" style="padding: 4px 12px; background-color: #e6e6fa; border: 1px solid #999; cursor: pointer;">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

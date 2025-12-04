@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prauts</title>
+    <link rel="stylesheet" href="Bootstrap/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="text-center">Latihan Pra UTS</h1>
+        <h2 class="text-center mb-4">Tabel Informasi</h2>
+
+        <div class="table-responsive d-flex justify-content-center">
+            <table class="table table-bordered w-auto text-center align-middle">
+                <thead class="table-secondary">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Eksekutif</th>
+                        <th scope="col">Bisnis</th>
+                        <th scope="col">Ekonomi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" class="table-secondary"><u>Jakarta</u></th>
+                        <td><u>70000</u></td>
+                        <td><u>40000</u></td>
+                        <td><u>10000</u></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-secondary"><u>Solo</u></th>
+                        <td><u>80000</u></td>
+                        <td><u>50000</u></td>
+                        <td><u>20000</u></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-secondary"><u>Surabaya</u></th>
+                        <td><u>90000</u></td>
+                        <td><u>60000</u></td>
+                        <td><u>30000</u></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-10 col-lg-7">
+                <div class="card border-secondary">
+                    <div class="card-header text-center fw-semibold fs-5">Travel Bintang Abadi</div>
+                    <div class="card-body">
+                        <form id="travelForm">
+                            <div class="row g-2 align-items-center mb-3">
+                                <label for="nama" class="col-sm-3 col-form-label">Nama</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="nama" name="nama" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row g-2 align-items-center mb-3">
+                                <label for="tujuan" class="col-sm-3 col-form-label">Tujuan</label>
+                                <div class="col-sm-9">
+                                    <select id="tujuan" name="tujuan" class="form-select">
+                                        <option value="Jakarta">Jakarta</option>
+                                        <option value="Solo">Solo</option>
+                                        <option value="Surabaya">Surabaya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row g-2 align-items-center mb-3">
+                                <label for="kelas" class="col-sm-3 col-form-label">Kelas</label>
+                                <div class="col-sm-9">
+                                    <select id="kelas" name="kelas" class="form-select">
+                                        <option value="Eksekutif">Eksekutif</option>
+                                        <option value="Bisnis">Bisnis</option>
+                                        <option value="Ekonomi">Ekonomi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row g-2 align-items-center mb-3">
+                                <label for="jumlah" class="col-sm-3 col-form-label">Jumlah Tiket</label>
+                                <div class="col-sm-9">
+                                    <input type="number" id="jumlah" name="jumlah" min="1" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row g-2 align-items-center">
+                                <label class="col-sm-3 col-form-label">Member</label>
+                                <div class="col-sm-9 d-flex align-items-center gap-2">
+                                    <input type="checkbox" id="member" name="member" value="Ya" class="form-check-input">
+                                    <label for="member" class="form-check-label mb-0">Ya</label>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-primary px-4" onclick="hitung()">Hitung</button>
+                                <button type="reset" class="btn btn-outline-secondary px-4 ms-2">Ulang</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Hasil Perhitungan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nama:</strong> <span id="modalNama"></span></p>
+                    <p><strong>Tujuan:</strong> <span id="modalTujuan"></span></p>
+                    <p><strong>Kelas:</strong> <span id="modalKelas"></span></p>
+                    <p><strong>Jumlah Tiket:</strong> <span id="modalJumlah"></span></p>
+                    <hr>
+                    <p><strong>Harga Tiket:</strong> Rp <span id="modalHargaTiket"></span></p>
+                    <p><strong>Sub Total:</strong> Rp <span id="modalSubTotal"></span></p>
+                    <p><strong>Diskon:</strong> Rp <span id="modalDiskon"></span></p>
+                    <p><strong>Total Bayar:</strong> Rp <span id="modalTotalBayar"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="Bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const hargaTiketMap = {
+            Jakarta: { Eksekutif: 70000, Bisnis: 40000, Ekonomi: 10000 },
+            Solo: { Eksekutif: 80000, Bisnis: 50000, Ekonomi: 20000 },
+            Surabaya: { Eksekutif: 90000, Bisnis: 60000, Ekonomi: 30000 }
+        };
+
+        function formatRupiah(angka) {
+            return angka.toLocaleString('id-ID');
+        }
+
+        function hitung() {
+            const nama = document.getElementById('nama').value.trim();
+            const tujuan = document.getElementById('tujuan').value;
+            const kelas = document.getElementById('kelas').value;
+            const jumlah = parseInt(document.getElementById('jumlah').value, 10) || 0;
+            const member = document.getElementById('member').checked;
+
+            if (!jumlah) {
+                alert('Masukkan jumlah tiket terlebih dahulu.');
+                return;
+            }
+
+            const hargaPerTiket = hargaTiketMap[tujuan][kelas];
+            const subTotal = hargaPerTiket * jumlah;
+            const diskon = member ? subTotal * 0.1 : 0;
+            const totalBayar = subTotal - diskon;
+
+            document.getElementById('modalNama').textContent = nama || '-';
+            document.getElementById('modalTujuan').textContent = tujuan;
+            document.getElementById('modalKelas').textContent = kelas;
+            document.getElementById('modalJumlah').textContent = jumlah;
+            document.getElementById('modalHargaTiket').textContent = formatRupiah(hargaPerTiket);
+            document.getElementById('modalSubTotal').textContent = formatRupiah(subTotal);
+            document.getElementById('modalDiskon').textContent = formatRupiah(diskon);
+            document.getElementById('modalTotalBayar').textContent = formatRupiah(totalBayar);
+
+            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            resultModal.show();
+        }
+    </script>
+</body>
+</html>

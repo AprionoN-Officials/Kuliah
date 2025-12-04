@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form KHS</title>
+</head>
+<body>
+    <div style="width: 900px; margin: 20px auto; border: 3px solid #000; font-family: Arial, sans-serif;">
+        <!-- Header -->
+        <div style="text-align: center; font-size: 18px; font-weight: bold; padding: 15px; border-bottom: 2px solid #000;">
+            Form KHS
+        </div>
+        
+        <!-- Content Area -->
+        <div style="display: flex; min-height: 400px;">
+            <!-- Form Input (Kiri) -->
+            <div style="width: 50%; border-right: 2px solid #000; padding: 20px;">
+                <form id="khsForm" onsubmit="hitungNilai(event)">
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" name="nim" id="nim" placeholder="NIM" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" name="nama" id="nama" placeholder="Nama Lengkap" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <select name="jurusan" id="jurusan" style="width: 100%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                            <option value="">Pilih Jurusan</option>
+                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Sistem Informasi">Sistem Informasi</option>
+                            <option value="Teknik Komputer">Teknik Komputer</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" name="kelas" id="kelas" placeholder="Kelas" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="number" name="uts" id="uts" placeholder="Nilai UTS" min="0" max="100" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="number" name="uas" id="uas" placeholder="Nilai UAS" min="0" max="100" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        <input type="number" name="kehadiran" id="kehadiran" placeholder="Kehadiran (max 16)" min="0" max="16" style="width: 95%; padding: 10px; border: 2px solid #000; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    
+                    <!-- Tombol -->
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <input type="submit" value="Submit" style="padding: 10px 25px; border: 2px solid #000; background-color: #fff; cursor: pointer; font-size: 14px; font-weight: bold;">
+                        <input type="reset" value="Reset" onclick="resetForm()" style="padding: 10px 25px; border: 2px solid #000; background-color: #fff; cursor: pointer; font-size: 14px; font-weight: bold;">
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Hasil Studi (Kanan) -->
+            <div style="width: 50%; padding: 20px;">
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 25px; text-align: center;">
+                    Hasil Studi
+                </div>
+                <div id="hasilContent" style="display: none;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px;">
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold; width: 40%;">NPM</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilNim"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Nama</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilNama"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Jurusan</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilJurusan"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Kelas</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilKelas"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Nilai UTS</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilUts"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Nilai UAS</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilUas"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Nilai Tugas</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilTugas"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #f0f0f0; font-weight: bold;">Kehadiran</td>
+                            <td style="padding: 8px; border: 1px solid #000;" id="hasilKehadiran"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #e0e0e0; font-weight: bold;">Nilai Akhir</td>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #e0e0e0; font-weight: bold;" id="hasilNilaiAkhir"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #d0d0d0; font-weight: bold;">GRADE</td>
+                            <td style="padding: 8px; border: 1px solid #000; background-color: #d0d0d0; font-weight: bold; font-size: 16px;" id="hasilGrade"></td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- Placeholder saat belum ada hasil -->
+                <div id="placeholderText" style="color: #888; font-style: italic; text-align: center; margin-top: 50px;">
+                    Isi form dan klik Submit untuk melihat hasil
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hitungNilai(event) {
+            event.preventDefault();
+
+            const nim = document.getElementById('nim').value;
+            const nama = document.getElementById('nama').value;
+            const jurusan = document.getElementById('jurusan').value;
+            const kelas = document.getElementById('kelas').value;
+            const uts = parseFloat(document.getElementById('uts').value) || 0;
+            const uas = parseFloat(document.getElementById('uas').value) || 0;
+            const tugas = 80; // Nilai tugas fixed 80
+            const kehadiran = parseFloat(document.getElementById('kehadiran').value) || 0;
+
+            if (kehadiran > 16) {
+                alert('Kehadiran tidak boleh lebih dari 16!');
+                return;
+            }
+
+            if (!nim || !nama || !jurusan || !kelas || uts === 0 || uas === 0 || kehadiran === 0) {
+                alert('Semua field harus diisi!');
+                return;
+            }
+
+            const nilaiAkhir = (0.3 * uts) + (0.4 * uas) + (0.2 * tugas) + ((kehadiran/16) * 10);
+
+            let grade;
+            if (nilaiAkhir > 90) {
+                grade = "A+";
+            } else if (nilaiAkhir > 85 && nilaiAkhir <= 90) {
+                grade = "A";
+            } else if (nilaiAkhir > 75 && nilaiAkhir <= 85) {
+                grade = "A-";
+            } else if (nilaiAkhir > 65 && nilaiAkhir <= 75) {
+                grade = "B";
+            } else if (nilaiAkhir > 55 && nilaiAkhir <= 65) {
+                grade = "C";
+            } else if (nilaiAkhir > 45 && nilaiAkhir <= 55) {
+                grade = "D";
+            } else {
+                grade = "E";
+            }
+
+            document.getElementById('hasilNim').textContent = nim;
+            document.getElementById('hasilNama').textContent = nama;
+            document.getElementById('hasilJurusan').textContent = jurusan;
+            document.getElementById('hasilKelas').textContent = kelas;
+            document.getElementById('hasilUts').textContent = uts;
+            document.getElementById('hasilUas').textContent = uas;
+            document.getElementById('hasilTugas').textContent = tugas;
+            document.getElementById('hasilKehadiran').textContent = kehadiran;
+            document.getElementById('hasilNilaiAkhir').textContent = nilaiAkhir.toFixed(1);
+            document.getElementById('hasilGrade').textContent = grade;
+
+            // Sembunyikan placeholder dan tampilkan hasil
+            document.getElementById('placeholderText').style.display = 'none';
+            document.getElementById('hasilContent').style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('hasilContent').style.display = 'none';
+            document.getElementById('placeholderText').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

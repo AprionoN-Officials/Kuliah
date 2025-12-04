@@ -1,0 +1,183 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sederhana — Contoh Tampilan Web</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#fff;
+      --accent:#2b7cff;
+      --muted:#6b7280;
+      --radius:12px;
+      --glass: rgba(255,255,255,0.6);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#eef6ff 0%,var(--bg) 100%);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    /* Header / Nav */
+    header{
+      background: linear-gradient(90deg, rgba(43,124,255,0.95), rgba(59,130,246,0.95));
+      color:white;
+      padding:18px 24px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow:0 4px 18px rgba(11,46,91,0.12);
+    }
+    .container{max-width:1100px;margin:0 auto;padding:0 16px;}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:600}
+    .logo{
+      width:40px;height:40px;border-radius:8px;background:var(--glass);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+      box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    }
+    nav{display:flex;gap:18px;margin-left:auto;align-items:center}
+    nav a{color:rgba(255,255,255,0.9);text-decoration:none;font-weight:500}
+    .hero{
+      padding:48px 0 28px;
+      display:flex;
+      gap:28px;
+      align-items:center;
+    }
+
+    /* Main layout */
+    main{padding:20px 0 60px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:18px;
+      align-items:start;
+    }
+
+    /* Card */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 6px 20px rgba(15,23,42,0.06);
+    }
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+    .card h3{margin:0 0 8px;font-size:1.05rem}
+    .card p{margin:0;color:var(--muted);font-size:0.95rem}
+
+    /* Aside */
+    aside .profile{
+      display:flex;gap:12px;align-items:center;margin-bottom:12px;
+    }
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#6c8cff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+
+    /* Footer */
+    footer{padding:28px 0;color:var(--muted);text-align:center;font-size:0.9rem}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr}
+      nav{display:none}
+      .hero{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <div style="font-size:1.05rem">Sederhana</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.85);margin-top:2px">Contoh tampilan web</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#">Beranda</a>
+        <a href="#">Fitur</a>
+        <a href="#">Tentang</a>
+        <a href="#">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <div style="flex:1">
+        <h1 style="margin:0 0 8px">Halo — Selamat Datang</h1>
+        <p style="margin:0;color:var(--muted);max-width:60ch">
+          Ini adalah contoh tampilan web sederhana dengan CSS yang responsif. Gunakan sebagai titik awal untuk proyek Anda.
+        </p>
+      </div>
+      <div style="min-width:180px">
+        <div class="card">
+          <strong style="display:block;margin-bottom:8px">Cepat Mulai</strong>
+          <p style="margin:0;color:var(--muted)">Salin file ini, sesuaikan konten dan gaya sesuai kebutuhan.</p>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <div class="grid">
+        <section>
+          <div class="card" style="margin-bottom:14px">
+            <h3>Panel Utama</h3>
+            <p>Bagian utama untuk menampilkan konten penting, artikel, atau daftar item.</p>
+          </div>
+
+          <div class="cards">
+            <div class="card">
+              <h3>Card 1</h3>
+              <p>Deskripsi singkat untuk card pertama.</p>
+            </div>
+            <div class="card">
+              <h3>Card 2</h3>
+              <p>Deskripsi singkat untuk card kedua.</p>
+            </div>
+            <div class="card">
+              <h3>Card 3</h3>
+              <p>Deskripsi singkat untuk card ketiga.</p>
+            </div>
+            <div class="card">
+              <h3>Card 4</h3>
+              <p>Deskripsi singkat untuk card keempat.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside>
+          <div class="card">
+            <div class="profile">
+              <div class="avatar">A</div>
+              <div>
+                <strong>Aprio</strong>
+                <div style="color:var(--muted);font-size:0.9rem">Pengembang</div>
+              </div>
+            </div>
+
+            <hr style="border:none;border-top:1px solid #eef3fb;margin:12px 0">
+
+            <h3 style="margin-top:0;margin-bottom:8px">Ringkasan</h3>
+            <p style="margin:0;color:var(--muted)">Gunakan panel ini untuk menaruh tautan cepat, statistik, atau informasi profil singkat.</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      &copy; 2025 Sederhana • Dibuat dengan sederhana
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator Sederhana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #7fffe5, #6ee7b7, #4dd0a7, #2eb398, #1d8d7a);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .calculator-container {
+            background: rgba(86, 95, 100, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4dd0a7;
+        }
+        
+        select {
+            padding: 10px;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4dd0a7, #2eb398);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 179, 152, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        input[readonly] {
+            background-color: white;
+            color: #2d3748;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="form-group">
+            <label>Bilangan 1</label>
+            <input type="text" id="bilangan1" value="5">
+        </div>
+        
+        <div class="form-group">
+            <label>Bilangan 2</label>
+            <input type="text" id="bilangan2" value="3">
+        </div>
+        
+        <div class="form-group">
+            <label>Operator</label>
+            <select id="operator">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Hasil</label>
+            <input type="text" id="hasil" value="8" readonly>
+        </div>
+        
+        <div class="form-group">
+            <button onclick="hitung()">Process</button>
+        </div>
+    </div>
+
+    <script>
+        function hitung() {
+            const bil1 = parseFloat(document.getElementById('bilangan1').value);
+            const bil2 = parseFloat(document.getElementById('bilangan2').value);
+            const operator = document.getElementById('operator').value;
+            let hasil = 0;
+
+            switch(operator) {
+                case '+':
+                    hasil = bil1 + bil2;
+                    break;
+                case '-':
+                    hasil = bil1 - bil2;
+                    break;
+                case '*':
+                    hasil = bil1 * bil2;
+                    break;
+                case '/':
+                    hasil = bil2 !== 0 ? bil1 / bil2 : 'Error';
+                    break;
+            }
+
+            document.getElementById('hasil').value = hasil;
+        }
+    </script>
+</body>
+</html>

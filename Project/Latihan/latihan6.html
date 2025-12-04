@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form KHS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #004146 0%, #018076 30%, #03BFB5 70%, #949398 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #004146, #018076);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-label {
+            width: 140px;
+            font-weight: bold;
+            color: #004146;
+            text-align: left;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #03BFB5;
+            background: white;
+            box-shadow: 0 0 10px rgba(3, 191, 181, 0.3);
+        }
+
+        .select-field {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .select-field:focus {
+            outline: none;
+            border-color: #03BFB5;
+            background: white;
+            box-shadow: 0 0 10px rgba(3, 191, 181, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, #018076, #03BFB5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(1, 128, 118, 0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(3, 191, 181, 0.6);
+        }
+
+        .btn-reset {
+            background: linear-gradient(45deg, #949398, #004146);
+            color: white;
+            box-shadow: 0 4px 15px rgba(148, 147, 152, 0.4);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(148, 147, 152, 0.6);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(45deg, #004146, #018076);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-table th {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            font-weight: bold;
+            color: #333;
+            width: 40%;
+        }
+
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .result-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .grade-row {
+            background: linear-gradient(45deg, #018076, #03BFB5) !important;
+            color: white !important;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .grade-row td {
+            background: linear-gradient(45deg, #018076, #03BFB5) !important;
+            color: white !important;
+        }
+
+        .final-score-row {
+            background: linear-gradient(45deg, #004146, #018076) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .final-score-row td {
+            background: linear-gradient(45deg, #004146, #018076) !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            Form KHS
+        </div>
+        
+        <div class="form-container">
+            <form id="khsForm" onsubmit="hitungNilai(event)">
+                <div class="input-group">
+                    <label class="input-label">NIM:</label>
+                    <input type="text" name="nim" id="nim" placeholder="Masukkan NIM" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Nama Lengkap:</label>
+                    <input type="text" name="nama" id="nama" placeholder="Masukkan nama lengkap" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Jurusan:</label>
+                    <select name="jurusan" id="jurusan" class="select-field" required>
+                        <option value="">Pilih Jurusan</option>
+                        <option value="Teknik Informatika">Teknik Informatika</option>
+                        <option value="Sistem Informasi">Sistem Informasi</option>
+                        <option value="Teknik Komputer">Teknik Komputer</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Kelas:</label>
+                    <input type="text" name="kelas" id="kelas" placeholder="Contoh: S1/TI/5/A" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Nilai UTS:</label>
+                    <input type="number" name="uts" id="uts" placeholder="0-100" min="0" max="100" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Nilai UAS:</label>
+                    <input type="number" name="uas" id="uas" placeholder="0-100" min="0" max="100" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Nilai Tugas:</label>
+                    <input type="number" name="tugas" id="tugas" placeholder="0-100" min="0" max="100" class="input-field" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Kehadiran:</label>
+                    <input type="number" name="kehadiran" id="kehadiran" placeholder="Maksimal 16" min="0" max="16" class="input-field" required>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit">Submit</button>
+                    <button type="reset" class="btn btn-reset" onclick="resetForm()">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Hasil Studi</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <table class="result-table">
+                    <tr>
+                        <th>NPM</th>
+                        <td id="hasilNim"></td>
+                    </tr>
+                    <tr>
+                        <th>Nama</th>
+                        <td id="hasilNama"></td>
+                    </tr>
+                    <tr>
+                        <th>Jurusan</th>
+                        <td id="hasilJurusan"></td>
+                    </tr>
+                    <tr>
+                        <th>Kelas</th>
+                        <td id="hasilKelas"></td>
+                    </tr>
+                    <tr>
+                        <th>Nilai UTS</th>
+                        <td id="hasilUts"></td>
+                    </tr>
+                    <tr>
+                        <th>Nilai UAS</th>
+                        <td id="hasilUas"></td>
+                    </tr>
+                    <tr>
+                        <th>Nilai Tugas</th>
+                        <td id="hasilTugas"></td>
+                    </tr>
+                    <tr>
+                        <th>Kehadiran</th>
+                        <td id="hasilKehadiran"></td>
+                    </tr>
+                    <tr class="final-score-row">
+                        <th>Nilai Akhir</th>
+                        <td id="hasilNilaiAkhir"></td>
+                    </tr>
+                    <tr class="grade-row">
+                        <th>GRADE</th>
+                        <td id="hasilGrade"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hitungNilai(event) {
+            event.preventDefault();
+
+            const nim = document.getElementById('nim').value;
+            const nama = document.getElementById('nama').value;
+            const jurusan = document.getElementById('jurusan').value;
+            const kelas = document.getElementById('kelas').value;
+            const uts = parseFloat(document.getElementById('uts').value) || 0;
+            const uas = parseFloat(document.getElementById('uas').value) || 0;
+            const tugas = parseFloat(document.getElementById('tugas').value) || 0;
+            const kehadiran = parseFloat(document.getElementById('kehadiran').value) || 0;
+
+            if (kehadiran > 16) {
+                alert('Kehadiran tidak boleh lebih dari 16!');
+                return;
+            }
+
+            const nilaiAkhir = (0.30 * uts) + (0.40 * uas) + (0.20 * tugas) + ((kehadiran/16) * 10);
+
+            let grade;
+            if (nilaiAkhir > 90) {
+                grade = "A+";
+            } else if (nilaiAkhir > 85 && nilaiAkhir <= 90) {
+                grade = "A";
+            } else if (nilaiAkhir > 75 && nilaiAkhir <= 85) {
+                grade = "A-";
+            } else if (nilaiAkhir > 65 && nilaiAkhir <= 75) {
+                grade = "B";
+            } else if (nilaiAkhir > 55 && nilaiAkhir <= 65) {
+                grade = "C";
+            } else if (nilaiAkhir > 45 && nilaiAkhir <= 55) {
+                grade = "D";
+            } else {
+                grade = "E";
+            }
+
+            document.getElementById('hasilNim').textContent = nim;
+            document.getElementById('hasilNama').textContent = nama;
+            document.getElementById('hasilJurusan').textContent = jurusan;
+            document.getElementById('hasilKelas').textContent = kelas;
+            document.getElementById('hasilUts').textContent = uts;
+            document.getElementById('hasilUas').textContent = uas;
+            document.getElementById('hasilTugas').textContent = tugas;
+            document.getElementById('hasilKehadiran').textContent = kehadiran;
+            document.getElementById('hasilNilaiAkhir').textContent = nilaiAkhir.toFixed(1);
+            document.getElementById('hasilGrade').textContent = grade;
+
+            document.getElementById('resultModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        function resetForm() {
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
