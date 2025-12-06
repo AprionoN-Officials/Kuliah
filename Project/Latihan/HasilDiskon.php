@@ -4,7 +4,6 @@
     <title>Hasil Transaksi</title>
 </head>
 <body>
-
 <?php
     $nama   = $_POST['nama'];
     $telp   = $_POST['telp'];
@@ -28,7 +27,6 @@
         }
     }
     $disc = hitung_diskon($total);
-
     $totBayar = $total - $disc;
 ?>
 
@@ -53,9 +51,7 @@
 
         <span class="label">Total Bayar</span> : <?php echo number_format($totBayar, 2, ',', '.'); ?>
     </p>
-
     <br>
     <a href="LatihanDiskon.php">back</a> 
-
 </body>
 </html>
