@@ -1,58 +1,46 @@
-# 🎓 Koleksi Project & Latihan Kuliah Web Programming
+# 🎓 Koleksi Materi & Latihan Web Programming
 
-Selamat datang di repository ini! Repository ini berisi kumpulan kode sumber, contoh materi, dan latihan yang saya kerjakan selama perkuliahan Pemrograman Web.
+Repository ini berisi kumpulan kode sumber dan materi latihan yang saya kerjakan selama mata kuliah Pemrograman Web. Fokus utama dari repository ini adalah dokumentasi pembelajaran HTML, CSS (Bootstrap), dan PHP dasar.
 
-Fokus utama dari project ini adalah pengembangan web dasar hingga menengah menggunakan HTML, CSS (Bootstrap), dan PHP.
+## 📂 Navigasi Folder
 
-## 📂 Navigasi Cepat (Folder Link)
+Berikut adalah akses langsung ke folder materi utama:
 
-Berikut adalah akses langsung ke folder-folder materi di dalam project ini:
-
-### 1. [📁 Folder Contoh](./Contoh)
-Folder ini berisi demonstrasi kode dasar untuk memahami konsep per elemen.
-* **Isi:** Dasar HTML (Form, Table, Input), Dasar PHP (Looping, Array, Function, Switch Case).
+### 1. [📁 Folder Contoh (Materi Dasar)](./Contoh)
+Folder ini berisi demonstrasi kode untuk memahami konsep per elemen.
+* **Isi:** Dasar HTML (Form, Table, Input), Dasar PHP (Looping, Array, Function), dan skrip Python sederhana.
 * **Tujuan:** Sebagai referensi sintaks dan logika dasar.
 
-### 2. [📁 Folder Latihan](./Latihan)
-Folder ini berisi studi kasus dan tugas-tugas latihan yang lebih kompleks.
-* **Isi:** Implementasi Bootstrap, Logika Diskon, Form Data Karyawan, dan latihan tata letak (layout).
-* **Tujuan:** Penerapan materi ke dalam kasus nyata.
-
-### 3. [📁 Project UTS / Pw1_0050](./Pw1_0050)
-Folder ini berisi project khusus (seperti tugas besar atau UTS).
-* **Isi:** Halaman web responsif menggunakan framework Bootstrap (tema pesawat/travel).
+### 2. [📁 Folder Latihan (Studi Kasus)](./Latihan)
+Folder ini berisi penerapan materi ke dalam kasus latihan yang lebih kompleks.
+* **Isi:** Latihan membuat layout dengan Bootstrap, logika diskon PHP, dan form data.
+* **Tujuan:** Implementasi materi pembelajaran ke dalam studi kasus.
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
-Project ini dibangun menggunakan teknologi berikut:
+* **HTML5**: Struktur halaman web.
+* **CSS3 & Bootstrap**: Desain antarmuka yang responsif.
+* **PHP**: Logika pemrograman *server-side*.
 
-* **HTML5**: Untuk struktur halaman web.
-* **CSS3 & Bootstrap**: Untuk mempercantik tampilan dan membuatnya responsif (mobile-friendly).
-* **PHP**: Untuk logika pemrograman di sisi server (seperti menghitung diskon atau memproses form).
-* **Python**: (Terdapat beberapa skrip algoritma numerik).
+## 🚀 Cara Menjalankan
 
-## 🚀 Cara Menjalankan Project
+### File HTML
+Cukup buka file `.html` langsung (klik dua kali) untuk melihat hasilnya di browser.
 
-### Untuk File HTML
-1.  Buka folder project.
-2.  Klik dua kali pada file `.html` (misalnya `Center.html` atau `latihan.html`).
-3.  File akan langsung terbuka di browser favorit Anda (Chrome, Edge, Firefox).
-
-### Untuk File PHP
-Karena PHP adalah bahasa *server-side*, Anda memerlukan web server lokal:
-1.  Pastikan Anda telah menginstal **XAMPP** atau **Laragon**.
-2.  Pindahkan folder project ini ke dalam folder `htdocs` (jika pakai XAMPP) atau `www` (jika pakai Laragon).
-3.  Nyalakan **Apache** pada control panel XAMPP/Laragon.
-4.  Buka browser dan ketik:
-    `http://localhost/nama-folder-project-kamu/Project/nama-file.php`
+### File PHP
+1.  Pastikan **XAMPP** atau **Laragon** sudah aktif (Apache Web Server).
+2.  Letakkan folder project ini di dalam folder `htdocs` (XAMPP) atau `www` (Laragon).
+3.  Akses melalui browser dengan alamat:
+    `http://localhost/Project/nama-folder/nama-file.php`
 
 ---
 
 ## 👤 Author
 
 **Aprionon**
-*(Mahasiswa Teknik Informatika / Ilmu Komputer)*
+*(Mahasiswa Teknik Informatika)*
 
-Terima kasih telah berkunjung! Jangan lupa kasih ⭐ jika project ini bermanfaat.
+---
+*Dibuat untuk keperluan dokumentasi perkuliahan.*
