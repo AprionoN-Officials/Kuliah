@@ -38,7 +38,8 @@ type: "POST",
 url: actionUrl,
 data: dataForm, // serializes the form's elements.
 success: function(data)
-{ //alert(data); // show response from the php script.
+{ 
+//alert(data); // show response from the php script.
 $("#tampil_data").load("ajaxFormTampil.php");
 }
 });
