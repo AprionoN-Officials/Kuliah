@@ -15,6 +15,8 @@ Folder ini berisi demonstrasi kode untuk memahami konsep per elemen.
 Folder ini berisi penerapan materi ke dalam kasus latihan yang lebih kompleks.
 * **Isi:** Latihan membuat layout dengan Bootstrap, logika diskon PHP, dan form data.
 * **Tujuan:** Implementasi materi pembelajaran ke dalam studi kasus.
+### 3. [📁 Folder Database](./php-mysql)
+Folder ini berisi Database.
 
 ---
 
