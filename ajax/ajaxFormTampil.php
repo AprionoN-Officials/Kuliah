@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="../mysql/style.css">
+<link rel="stylesheet" href="style.css">
 <?php
-require_once("../mysql/config.php");
+require_once("config.php");
 $sql = "SELECT nik,nama,jurusan FROM mahasiswa";
 $result = $mysqli -> query($sql);
 ?>

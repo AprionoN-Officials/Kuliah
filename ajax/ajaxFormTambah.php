@@ -1,9 +1,9 @@
 <?php
-include('../mysql/config.php');
+include('config.php');
 $nik=$_POST['nik'];
 $nama=$_POST['nama'];
 $jurusan=$_POST['jurusan'];
-$queryInsert="INSERT INTO mahasiswa (nik,nama,jurusan) VALUES (?, ?, ?)";
+$queryInsert="INSERT INTO mahasiswa (nik,nama,jurusan) VALUES (?, ?, ?)"; var_dump($queryInsert);
 $stmt = $mysqli->prepare($queryInsert);
 $stmt->bind_param("sss", $a, $b, $c);
 $a = $nik;

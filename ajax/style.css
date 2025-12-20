@@ -1,0 +1,188 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.box {
+    max-width: auto;
+    margin: 60px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 8px;
+    border-top: 6px solid #0a9f67;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.box h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #0a9f67;
+    letter-spacing: 2px;
+}
+
+.box table {
+    margin: auto;
+}
+
+.box td {
+    padding: 8px;
+}
+
+.box input[type="text"],
+.box input[type="password"] {
+    width: 240px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.box input:focus {
+    border-color: #0a9f67;
+    outline: none;
+    box-shadow: 0 0 5px rgba(10,159,103,0.4);
+}
+
+.box button {
+    padding: 8px 18px;
+    border-radius: 5px;
+    border: none;
+    background: #0a9f67;
+    color: #fff;
+    cursor: pointer;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+.box button:hover {
+    background: #087a50;
+}
+
+.table-container {
+    margin-top: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+table th {
+    background: #0a9f67;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #eaf7f1;
+    transition: 0.3s;
+}
+
+/* Action icon */
+.table-action a {
+    margin-right: 8px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.table-action a.edit {
+    color: #f0ad4e;
+}
+
+.table-action a.delete {
+    color: #d9534f;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+}
+
+
+
+
+/* Base button */
+.btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Primary (Login / Simpan) */
+.btn-primary {
+    background: #0a9f67;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #087a50;
+    box-shadow: 0 4px 10px rgba(10,159,103,0.4);
+}
+
+/* Secondary (Cancel / Reset) */
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Warning (Edit) */
+.btn-warning {
+    background: #f0ad4e;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background: #ec971f;
+}
+
+/* Danger (Delete) */
+.btn-danger {
+    background: #d9534f;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #c9302c;
+}
+
+/* Small button */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+/* Disabled */
+.btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
