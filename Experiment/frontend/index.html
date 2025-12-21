@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chat App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Login Pengguna</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="loginUser" required placeholder="Username Anda">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" required placeholder="Password Anda">
+            </div>
+            
+            <button type="submit" class="btn-primary">Masuk (Login)</button>
+        </form>
+
+        <div style="margin-top: 20px;">
+            <a href="reset.html" style="color: #d9534f; font-weight: bold;">
+                Lupa Password? Reset dengan Kode Unik
+            </a>
+        </div>
+
+        <p class="link-text">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

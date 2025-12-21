@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="reset-form-section">
+            <h2>Pemulihan Akun</h2>
+            <p style="font-size: 0.9rem; color: #666;">Masukkan Username, Kode Pemulihan lama Anda, dan Password Baru yang diinginkan.</p>
+            
+            <form id="resetForm">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="resetUser" required placeholder="Username akun">
+                </div>
+                <div class="input-group">
+                    <label>Kode Pemulihan (Lama)</label>
+                    <input type="text" id="oldCode" required placeholder="Cth: ABC-123-XYZ">
+                </div>
+                <hr>
+                <div class="input-group">
+                    <label>Password Baru</label>
+                    <input type="password" id="newPass" required placeholder="Password Baru">
+                </div>
+                
+                <button type="submit" class="btn-primary" style="background-color: #d9534f;">Reset Password</button>
+            </form>
+            <p class="link-text"><a href="index.html">Batal & Kembali Login</a></p>
+        </div>
+
+        <div id="new-code-section" style="display: none;">
+            <div class="success-icon">✅</div>
+            <h2>Reset Berhasil!</h2>
+            <p>Password Anda telah diganti. <br>Sistem telah membuat <b>Kode Pemulihan BARU</b> untuk Anda.</p>
+            
+            <div class="code-box">
+                <span id="newCodeDisplay">LOADING...</span>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ UPDATE PENTING:</strong><br>
+                Kode lama Anda sudah <u>HANGUS</u>. Harap simpan kode baru ini sekarang juga untuk pemulihan di masa depan.
+            </div>
+
+            <button onclick="window.location.href='index.html'" class="btn-secondary">
+                Saya sudah catat, Ke Login
+            </button>
+        </div>
+    </div>
+
+    <script src="reset.js"></script>
+</body>
+</html>
