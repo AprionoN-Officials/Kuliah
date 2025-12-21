@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Akun Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div id="register-section">
+            <h2>Daftar Akun Baru</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="username" required placeholder="Masukkan username">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required placeholder="Masukkan password">
+                </div>
+                <button type="submit" class="btn-primary">Daftar Sekarang</button>
+            </form>
+            <p class="link-text">Sudah punya akun? <a href="index.html">Login di sini</a></p>
+        </div>
+
+        <div id="recovery-section" style="display: none;">
+            <div class="success-icon">✅</div>
+            <h2>Registrasi Berhasil!</h2>
+            <p>Akun Anda telah dibuat. Demi keamanan, simpan kode di bawah ini.</p>
+            
+            <div class="code-box">
+                <span id="recoveryCodeDisplay">LOADING...</span>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ PERINGATAN PENTING:</strong><br>
+                Harap catat/salin kode ini sekarang. Kode ini <u>tidak akan ditampilkan lagi</u> dan kami tidak menyimpannya dalam bentuk teks asli.
+            </div>
+
+            <button onclick="window.location.href='index.html'" class="btn-secondary">
+                Saya sudah simpan, Lanjutkan ke Login
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
