@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 include 'config/database.php';
-
+## tees
 $kode = isset($_GET['kode']) ? mysqli_real_escape_string($conn, $_GET['kode']) : '';
 $nominal = isset($_GET['nominal']) ? intval($_GET['nominal']) : 0;
 
