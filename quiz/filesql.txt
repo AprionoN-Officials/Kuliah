@@ -1,0 +1,37 @@
+-- 1. Tabel Dept
+CREATE TABLE dept (
+    id int(5) NOT NULL AUTO_INCREMENT,
+    dept_code varchar(10),
+    deptname varchar(25),
+    location varchar(50),
+    PRIMARY KEY (id)
+);
+
+-- 2. Tabel Employee
+CREATE TABLE employee (
+    id int(5) NOT NULL AUTO_INCREMENT,
+    empname varchar(50),
+    phone varchar(15),
+    address varchar(50),
+    id_dept int(5) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- Mengisi tabel dept
+INSERT INTO dept (dept_code, deptname, location) VALUES 
+('IT01', 'Information Technology', 'Lantai 3'),
+('HR01', 'Human Resources', 'Lantai 2'),
+('FIN01', 'Finance', 'Lantai 1');
+
+-- Mengisi tabel employee
+INSERT INTO employee (empname, phone, address, id_dept) VALUES 
+('Budi', '082111411111', 'Jakarta Selatan aja', 1),
+('Siti', '081234567890', 'Bandung Kota', 2),
+('Andi', '089876543210', 'Surabaya Barat', 1);
+
+
+-- Constrain Foreign Key tabel employee
+ALTER TABLE employee
+ADD CONSTRAINT fk_employee_dept
+FOREIGN KEY (id_dept) REFERENCES dept(id)
+ON DELETE CASCADE ON UPDATE CASCADE;
