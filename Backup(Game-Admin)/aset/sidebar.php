@@ -15,7 +15,7 @@
         <a href="library.php" class="menu-btn <?= ($page == 'library.php') ? 'active' : '' ?>">
             <i class="fas fa-book-open"></i> Library
         </a>
-       <a href="daftargame.php" class="menu-btn <?= ($page == 'daftargame.php') ? 'active' : '' ?>">
+        <a href="list_game.php" class="menu-btn <?= ($page == 'list_game.php') ? 'active' : '' ?>">
             <i class="fas fa-list"></i> Daftar Game
         </a>
         <a href="topup.php" class="menu-btn <?= ($page == 'topup.php') ? 'active' : '' ?>">

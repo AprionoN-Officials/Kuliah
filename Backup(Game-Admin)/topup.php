@@ -8,12 +8,6 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Proteksi: Redirect admin ke dashboard admin
-if ($_SESSION['role'] === 'admin') {
-    header("Location: admin_dashboard.php");
-    exit;
-}
-
 $user_id = $_SESSION['user_id'];
 $username_saya = $_SESSION['username'];
 

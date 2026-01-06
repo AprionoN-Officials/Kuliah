@@ -3,12 +3,6 @@ session_start(); // Wajib paling atas
 include 'config/database.php';
 include 'config/getdata.php';
 
-// Proteksi: Redirect admin ke dashboard admin
-if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin') {
-    header("Location: admin_dashboard.php");
-    exit;
-}
-
 // 1. Ambil Data Game dari Database
 $query = "SELECT * FROM games WHERE stok > 0";
 $result = mysqli_query($conn, $query);
@@ -90,16 +84,15 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
                 
                 <div class="game-card">
                     <?php 
-                        // Logika Gambar (Mendukung berbagai ekstensi)
-                        $nama_dasar = strtolower(str_replace(' ', '_', $game['judul']));
-                        $ekstensi = ['jpg', 'jpeg', 'png', 'webp'];
-                        $imgSrc = "aset/images/tes.png"; // Default
+                        // Logika Gambar (Menggunakan folder 'aset')
+                        $nama_file_gambar = strtolower(str_replace(' ', '_', $game['judul'])) . ".jpg";
+                        $path_gambar = "aset/images/" . $nama_file_gambar;
 
-                        foreach ($ekstensi as $ext) {
-                            if (file_exists("aset/images/" . $nama_dasar . "." . $ext)) {
-                                $imgSrc = "aset/images/" . $nama_dasar . "." . $ext;
-                                break;
-                            }
+                        if (file_exists($path_gambar)) {
+                            $imgSrc = $path_gambar;
+                        } else {
+                            // Gambar default jika file tidak ditemukan
+                            $imgSrc = "aset/images/tes.png"; 
                         }
                     ?>
                     

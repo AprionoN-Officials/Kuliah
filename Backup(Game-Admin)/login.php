@@ -28,12 +28,8 @@ if (isset($_POST['login'])) {
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role']; // 'admin' atau 'user'
 
-            // Redirect sesuai role
-            if ($row['role'] === 'admin') {
-                echo "<script>alert('Login Berhasil! Selamat datang Admin'); window.location='admin_dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Login Berhasil!'); window.location='index.php';</script>";
-            }
+            // Redirect sesuai role (Opsional, tapi kita lempar ke index semua dulu)
+            echo "<script>alert('Login Berhasil!'); window.location='index.php';</script>";
             exit;
         }
     }

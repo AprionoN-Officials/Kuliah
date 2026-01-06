@@ -367,12 +367,6 @@ a { text-decoration: none; }
 .btn-primary { background-color: var(--primary); color: white; }
 .btn-primary:hover { background-color: var(--primary-hover); }
 
-.btn-warning { background-color: #f39c12; color: white; }
-.btn-warning:hover { background-color: #e67e22; }
-
-.btn-danger { background-color: var(--danger); color: white; }
-.btn-danger:hover { background-color: #c0392b; }
-
 .btn-block { display: block; width: 100%; text-align: center; }
 
 /* --- COMPONENT: CARDS (Grid Game) --- */
@@ -407,5 +401,3 @@ a { text-decoration: none; }
 .game-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .game-genre { font-size: 12px; color: var(--text-grey); display: block; margin-bottom: 10px; }
 .price-tag { color: var(--primary); font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block; }
-
-

@@ -48,17 +48,9 @@ $is_logged_in = isset($_SESSION['user_id']);
             
             <div class="left-side">
                 <?php 
-                    // Logika Gambar (Mendukung berbagai ekstensi)
-                    $nama_dasar = strtolower(str_replace(' ', '_', $game['judul']));
-                    $ekstensi = ['jpg', 'jpeg', 'png', 'webp'];
-                    $imgSrc = "aset/images/tes.png"; // Default
-
-                    foreach ($ekstensi as $ext) {
-                        if (file_exists("aset/images/" . $nama_dasar . "." . $ext)) {
-                            $imgSrc = "aset/images/" . $nama_dasar . "." . $ext;
-                            break;
-                        }
-                    }
+                    $nama_file = strtolower(str_replace(' ', '_', $game['judul'])) . ".jpg";
+                    $path = "aset/images/" . $nama_file;
+                    $imgSrc = file_exists($path) ? $path : "aset/images/tes.png";
                 ?>
                 <img src="<?= $imgSrc; ?>" class="detail-img" alt="Cover Game">
                 
