@@ -1,6 +1,24 @@
 <?php
 session_start();
 include 'config/database.php';
+// Pastikan tabel vouchers ada agar pengecekan voucher tidak error
+mysqli_query($conn, "CREATE TABLE IF NOT EXISTS vouchers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    kode VARCHAR(50) UNIQUE NOT NULL,
+    tipe ENUM('fixed','percent') NOT NULL DEFAULT 'percent',
+    potongan INT NOT NULL DEFAULT 0,
+    max_potongan INT NOT NULL DEFAULT 0,
+    min_transaksi INT NOT NULL DEFAULT 0,
+    stok INT NOT NULL DEFAULT 0,
+    aktif TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
+
+// Tambah kolom stok jika skema lama belum memilikinya
+$col_check = mysqli_query($conn, "SHOW COLUMNS FROM vouchers LIKE 'stok'");
+if ($col_check && mysqli_num_rows($col_check) === 0) {
+    mysqli_query($conn, "ALTER TABLE vouchers ADD COLUMN stok INT NOT NULL DEFAULT 0 AFTER min_transaksi");
+}
 
 if (!isset($_POST['konfirmasi'])) {
     header("Location: topup.php");
@@ -23,11 +41,19 @@ if (mysqli_num_rows($cek_user) == 0) {
 
 // 2. HITUNG DISKON DI SERVER
 $potongan = 0;
+$voucher_dipakai = false;
+$voucher_id = null;
 
 if (!empty($kode_diskon)) {
     $cek_voucher = mysqli_query($conn, "SELECT * FROM vouchers WHERE kode = '$kode_diskon' AND aktif = 1");
     if (mysqli_num_rows($cek_voucher) > 0) {
         $data_voucher = mysqli_fetch_assoc($cek_voucher);
+        $voucher_id = (int)$data_voucher['id'];
+
+        if ((int)$data_voucher['stok'] <= 0) {
+            echo "<script>alert('Stok voucher habis!'); window.location='topup.php';</script>";
+            exit;
+        }
         
         // Cek syarat minimal
         if ($nominal >= $data_voucher['min_transaksi']) {
@@ -45,13 +71,28 @@ if (!empty($kode_diskon)) {
                     $potongan = $hitung;
                 }
             }
-            // --------------------------------------
+
+            // Batasi agar tidak melebihi nominal (izinkan 100% gratis)
+            if ($potongan > $nominal) {
+                $potongan = $nominal;
+            }
+
+            $voucher_dipakai = $potongan > 0;
         }
     }
 }
 
-// Pastikan potongan tidak minus / melebihi nominal
-if ($potongan >= $nominal) { $potongan = 0; }
+// Kurangi stok voucher ketika dipakai
+if ($voucher_dipakai && $voucher_id !== null) {
+    mysqli_query($conn, "UPDATE vouchers SET stok = stok - 1 WHERE id = $voucher_id AND stok > 0");
+    // Jika stok tiba-tiba habis karena race condition, batal pakai voucher
+    if (mysqli_affected_rows($conn) === 0) {
+        $potongan = 0;
+        $voucher_dipakai = false;
+    }
+}
+
+$total_bayar = max(0, $nominal - $potongan);
 
 // 3. Proses Update Saldo (Saldo Masuk = Nominal Full, User Bayar = Nominal - Diskon)
 // Di sistem topup biasanya: Saldo bertambah sesuai nominal, tapi user bayar lebih murah.
@@ -61,7 +102,6 @@ if ($potongan >= $nominal) { $potongan = 0; }
 $query_topup = "UPDATE users SET saldo = saldo + $nominal WHERE username = '$target_username'";
 
 if (mysqli_query($conn, $query_topup)) {
-    $total_bayar = $nominal - $potongan;
     echo "<script>
             alert('Top Up Berhasil!\\nSaldo Masuk: Rp ".number_format($nominal)."\\nAnda Bayar: Rp ".number_format($total_bayar)."');
             window.location='topup.php';

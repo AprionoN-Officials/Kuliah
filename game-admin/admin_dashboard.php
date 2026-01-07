@@ -132,13 +132,37 @@ $nama_admin = $_SESSION['username'];
                     </div>
                 </a>
 
+                <a href="admin_transactions.php" style="text-decoration: none;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-receipt" style="font-size: 40px; color: #43e97b;"></i>
+                            <div>
+                                <h4 style="margin: 0; color: #333; font-size: 18px;">Cek Transaksi</h4>
+                                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Mengelola Transaksi User</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
                 <a href="admin_topup.php" style="text-decoration: none;">
                     <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <i class="fas fa-wallet" style="font-size: 40px; color: #43e97b;"></i>
                             <div>
-                                <h4 style="margin: 0; color: #333; font-size: 18px;">Manajemen Saldo</h4>
-                                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Isi Saldo User</p>
+                                <h4 style="margin: 0; color: #333; font-size: 18px;">Manajemen Top Up</h4>
+                                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Mengelola Nominal Top up</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="admin_vouchers.php" style="text-decoration: none;">
+                    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-ticket" style="font-size: 40px; color: #43e97b;"></i>
+                            <div>
+                                <h4 style="margin: 0; color: #333; font-size: 18px;">Manajemen Voucher</h4>
+                                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Mengelola Voucher Diskon</p>
                             </div>
                         </div>
                     </div>

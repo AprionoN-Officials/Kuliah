@@ -18,8 +18,20 @@
             <i class="fas fa-users"></i> Manajemen User
         </a>
         
+        <a href="admin_transactions.php" class="menu-btn <?= ($page == 'admin_transactions.php') ? 'active' : '' ?>">
+            <i class="fas fa-receipt"></i> Cek Transaksi
+        </a>
+
         <a href="admin_topup.php" class="menu-btn <?= ($page == 'admin_topup.php') ? 'active' : '' ?>">
-            <i class="fas fa-wallet"></i> Manajemen Saldo
+            <i class="fas fa-wallet"></i> Atur Nominal Top Up
+        </a>
+
+        <a href="admin_vouchers.php" class="menu-btn <?= ($page == 'admin_vouchers.php') ? 'active' : '' ?>">
+            <i class="fas fa-ticket-alt"></i> Voucher Diskon
+        </a>
+
+        <a href="index.php?preview=user" class="menu-btn">
+            <i class="fas fa-eye"></i> Preview Dashboard
         </a>
     </nav>
 </aside>

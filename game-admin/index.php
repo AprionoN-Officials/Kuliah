@@ -3,20 +3,52 @@ session_start(); // Wajib paling atas
 include 'config/database.php';
 include 'config/getdata.php';
 
-// Proteksi: Redirect admin ke dashboard admin
-if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin') {
+function resolveGameImage($game) {
+    $base_dir = __DIR__ . '/aset/images/';
+    $base_url = 'aset/images/';
+    $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+
+    $db_name = isset($game['gambar']) ? basename($game['gambar']) : '';
+    if ($db_name && file_exists($base_dir . $db_name)) {
+        return $base_url . $db_name;
+    }
+
+    $slug = strtolower(str_replace(' ', '_', $game['judul'] ?? ''));
+    if ($slug) {
+        foreach ($allowed_ext as $ext) {
+            $candidate = $slug . '.' . $ext;
+            if (file_exists($base_dir . $candidate)) {
+                return $base_url . $candidate;
+            }
+        }
+    }
+
+    if (file_exists($base_dir . 'default.jpg')) {
+        return $base_url . 'default.jpg';
+    }
+
+    return $base_url . 'tes.png';
+}
+
+// Mode preview untuk admin: ?preview=user
+$preview_param = (($_GET['preview'] ?? null) === 'user') ? 'user' : null;
+$is_admin = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin';
+$is_preview = $is_admin && $preview_param !== null;
+
+// Proteksi: admin normal dialihkan, kecuali sedang preview
+if ($is_admin && !$is_preview) {
     header("Location: admin_dashboard.php");
     exit;
 }
 
-// 1. Ambil Data Game dari Database
-$query = "SELECT * FROM games WHERE stok > 0";
+// 1. Ambil Data Game dari Database (acak setiap refresh/login)
+$query = "SELECT * FROM games WHERE stok > 0 ORDER BY RAND()";
 $result = mysqli_query($conn, $query);
 
 // 2. Cek Status Login dari Session
 $is_logged_in = isset($_SESSION['user_id']);
 $nama_user = $is_logged_in ? $_SESSION['username'] : '';
-$saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo($_SESSION['user_id'], $conn)) : "";
+$saldo = ($is_logged_in && isset($_SESSION['user_id'])) ? "Saldo: Rp " . number_format(getUserSaldo($_SESSION['user_id'], $conn)) : "";
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +59,73 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
     <title>Dashboard - GameRent</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="aset/style.css"> 
+    <style>
+        .search-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            transition: box-shadow .2s ease;
+        }
+        .search-trigger:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .search-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .search-modal .modal-box {
+            background: #fff;
+            width: 100%;
+            max-width: 640px;
+            max-height: 90vh;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow-y: auto;
+        }
+        .search-modal .close-btn {
+            position: absolute;
+            right: 14px;
+            top: 10px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #888;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .search-result-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .search-result-item img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .search-result-item .title { font-weight: 700; }
+        .search-empty { color: #888; text-align: center; padding: 12px; }
+    </style>
 </head>
 <body>
 
@@ -34,6 +133,12 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
 
     <main class="main-content">
         
+        <?php if ($is_preview): ?>
+        <div class="alert" style="background:#e8f4ff;border:1px solid #b6d7ff;color:#0a3d62;margin-bottom:15px;">
+            Mode Preview Admin — <a href="admin_dashboard.php" style="color:#0a3d62;text-decoration:underline;">kembali ke dashboard admin</a>
+        </div>
+        <?php endif; ?>
+
         <header class="top-bar">
             <div class="welcome-text">
                 <?php if ($is_logged_in): ?>
@@ -44,6 +149,10 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
             </div>
             
             <div class="user-action">
+                <button class="search-trigger" onclick="openSearchModal()">
+                    <i class="fas fa-search"></i>
+                    <span>Cari Game</span>
+                </button>
                 <?php if ($is_logged_in): ?>
                     <div class="user-dropdown">
                         
@@ -83,24 +192,14 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
         </header>
 
         <section>
-            <h3 class="section-title">Promo Spesial</h3>
+            <h3 class="section-title">Promo Sewa Hari ini!</h3>
             
             <div class="game-grid">
                 <?php while($game = mysqli_fetch_assoc($result)): ?>
                 
                 <div class="game-card">
                     <?php 
-                        // Logika Gambar (Mendukung berbagai ekstensi)
-                        $nama_dasar = strtolower(str_replace(' ', '_', $game['judul']));
-                        $ekstensi = ['jpg', 'jpeg', 'png', 'webp'];
-                        $imgSrc = "aset/images/tes.png"; // Default
-
-                        foreach ($ekstensi as $ext) {
-                            if (file_exists("aset/images/" . $nama_dasar . "." . $ext)) {
-                                $imgSrc = "aset/images/" . $nama_dasar . "." . $ext;
-                                break;
-                            }
-                        }
+                        $imgSrc = resolveGameImage($game);
                     ?>
                     
                     <img src="<?= $imgSrc; ?>" class="game-img" alt="<?= htmlspecialchars($game['judul']); ?>">
@@ -113,7 +212,8 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
                             Sewa: Rp <?= number_format($game['harga_sewa']); ?>/hari
                         </div>
 
-                        <a href="detail.php?id=<?= $game['id']; ?>" class="btn btn-primary btn-block">
+                        <?php $detail_link = 'detail.php?id=' . $game['id'] . ($is_preview ? '&preview=user' : ''); ?>
+                        <a href="<?= $detail_link; ?>" class="btn btn-primary btn-block">
                             Lihat Detail
                         </a>
                     </div>
@@ -124,5 +224,82 @@ $saldo = isset($_SESSION['user_id']) ? "Saldo: Rp " . number_format(getUserSaldo
         </section>
 
     </main>
+
+    <div id="searchModal" class="search-modal" onclick="backdropClose(event)">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeSearchModal()">&times;</span>
+            <h3 style="margin-top:0; margin-bottom:10px;">Cari Game</h3>
+            <input id="searchInput" type="text" class="search-input" placeholder="Ketik judul atau genre" oninput="renderSearchResults()" autofocus>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <script>
+        function openSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.style.display = 'flex';
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            renderSearchResults();
+            setTimeout(() => input.focus(), 50);
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        function backdropClose(event) {
+            if (event.target.id === 'searchModal') {
+                closeSearchModal();
+            }
+        }
+
+        function renderSearchResults() {
+            const q = (document.getElementById('searchInput').value || '').toLowerCase();
+            const cards = Array.from(document.querySelectorAll('.game-card'));
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+
+            if (!q) {
+                const info = document.createElement('div');
+                info.className = 'search-empty';
+                info.textContent = 'Ketik nama atau genre game untuk mencari.';
+                container.appendChild(info);
+                return;
+            }
+
+            const results = cards.map(card => {
+                const title = (card.querySelector('.game-title')?.textContent || '').trim();
+                const genre = (card.querySelector('.game-genre')?.textContent || '').trim();
+                const link = card.querySelector('a.btn-primary')?.getAttribute('href') || '#';
+                const img = card.querySelector('img')?.getAttribute('src') || '';
+                return { title, genre, link, img };
+            }).filter(item => {
+                return item.title.toLowerCase().includes(q) || item.genre.toLowerCase().includes(q);
+            }).sort((a, b) => a.title.localeCompare(b.title, 'id', { sensitivity: 'base' }));
+
+            if (results.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'search-empty';
+                empty.textContent = 'Tidak ada game yang cocok.';
+                container.appendChild(empty);
+                return;
+            }
+
+            results.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.title}">
+                    <div style="flex:1;">
+                        <div class="title">${item.title}</div>
+                        <div style="color:#666; font-size:13px;">${item.genre}</div>
+                    </div>
+                    <a href="${item.link}" class="btn btn-primary" style="padding:8px 12px;">Lihat</a>
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
 </body>
 </html>

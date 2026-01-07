@@ -20,6 +20,26 @@ $username_saya = $_SESSION['username'];
 // Ambil Saldo Terkini
 $query_user = mysqli_query($conn, "SELECT * FROM users WHERE id = '$user_id'");
 $user = mysqli_fetch_assoc($query_user);
+mysqli_query($conn, "CREATE TABLE IF NOT EXISTS topup_options (id INT AUTO_INCREMENT PRIMARY KEY, nominal INT NOT NULL UNIQUE)");
+function fetchTopupOptions($conn) {
+    $defaults = [10000,20000,50000,100000,250000,500000];
+    $opts = [];
+    $res = mysqli_query($conn, "SELECT nominal FROM topup_options ORDER BY nominal");
+    if ($res) {
+        while ($row = mysqli_fetch_assoc($res)) {
+            $opts[] = intval($row['nominal']);
+        }
+    }
+    // Jika tabel kosong, auto-seed default lalu pakai default
+    if (empty($opts)) {
+        foreach ($defaults as $d) {
+            mysqli_query($conn, "INSERT IGNORE INTO topup_options (nominal) VALUES ($d)");
+        }
+        $opts = $defaults;
+    }
+    return $opts;
+}
+$nominal_options = fetchTopupOptions($conn);
 ?>
 
 <!DOCTYPE html>
@@ -49,12 +69,9 @@ $user = mysqli_fetch_assoc($query_user);
             <h3 class="topup-title">Pilih Nominal Top Up</h3>
             
             <div class="nominal-grid">
-                <button type="button" class="nominal-btn" onclick="bukaModal(10000)">10.000</button>
-                <button type="button" class="nominal-btn" onclick="bukaModal(20000)">20.000</button>
-                <button type="button" class="nominal-btn" onclick="bukaModal(50000)">50.000</button>
-                <button type="button" class="nominal-btn" onclick="bukaModal(100000)">100.000</button>
-                <button type="button" class="nominal-btn" onclick="bukaModal(250000)">250.000</button>
-                <button type="button" class="nominal-btn" onclick="bukaModal(500000)">500.000</button>
+                <?php foreach ($nominal_options as $opt): ?>
+                    <button type="button" class="nominal-btn" onclick="bukaModal(<?= $opt ?>)"><?= number_format($opt,0,',','.') ?></button>
+                <?php endforeach; ?>
             </div>
         </section>
 
@@ -68,8 +85,6 @@ $user = mysqli_fetch_assoc($query_user);
             </div>
 
             <form action="proses_topup.php" method="POST">
-                
-                <form action="proses_topup.php" method="POST">
     
     <div class="form-group">
         <label style="font-size: 13px; color: #888;">Top Up Untuk (Username):</label>
@@ -160,15 +175,11 @@ $user = mysqli_fetch_assoc($query_user);
                     // Logic setelah mendapat jawaban dari database
                     if (data.status === 'success') {
                         // Jika Sukses
-                        currentDiskon = data.potongan;
-                        
-                        // Validasi Keamanan Frontend (Diskon gaboleh > Nominal)
-                        if (currentDiskon >= currentNominal) {
-                            currentDiskon = 0;
-                            pesanVoucher.innerHTML = "<span style='color:red;'>Potongan melebihi harga bayar!</span>";
-                        } else {
-                            pesanVoucher.innerHTML = "<span style='color:green;'>" + data.message + " Hemat " + formatRupiah(currentDiskon) + "</span>";
-                        }
+                        currentDiskon = Math.min(data.potongan, currentNominal);
+                        const dibatasi = data.potongan > currentNominal;
+                        const msgBase = data.message + (dibatasi ? ' (dibatasi ke nominal).' : '');
+                        const stokText = data.stok ? ' | Stok tersisa: ' + data.stok : '';
+                        pesanVoucher.innerHTML = "<span style='color:green;'>" + msgBase + stokText + " Hemat " + formatRupiah(currentDiskon) + "</span>";
                     } else {
                         // Jika Gagal (Kode salah / Kurang nominal)
                         currentDiskon = 0;
@@ -184,11 +195,11 @@ $user = mysqli_fetch_assoc($query_user);
 
         // 3. Update Tampilan Angka
         function updateTampilan() {
-            let totalBayar = currentNominal - currentDiskon;
+            const totalBayar = Math.max(0, currentNominal - currentDiskon);
 
             displayNominal.innerText = formatRupiah(currentNominal);
             displayDiskon.innerText = "- " + formatRupiah(currentDiskon);
-            displayTotal.innerText = formatRupiah(totalBayar);
+            displayTotal.innerText = totalBayar === 0 && currentDiskon > 0 ? 'Gratis' : formatRupiah(totalBayar);
         }
 
         function tutupModal() {

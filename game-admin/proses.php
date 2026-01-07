@@ -60,6 +60,8 @@ if ($user['saldo'] < $total_bayar) {
 mysqli_begin_transaction($conn);
 
 try {
+
+    
     // A. Kurangi Saldo User
     $update_user = "UPDATE users SET saldo = saldo - $total_bayar WHERE id = '$user_id'";
     mysqli_query($conn, $update_user);
@@ -79,11 +81,29 @@ try {
     }
     
     mysqli_query($conn, $sql_transaksi);
+    $trx_id = mysqli_insert_id($conn);
+    $kode_transaksi = 'TRX-' . str_pad($trx_id, 6, '0', STR_PAD_LEFT);
 
     // Jika semua lancar, simpan perubahan
     mysqli_commit($conn);
 
-    echo "<script>alert('Transaksi Berhasil! Game telah masuk ke Library Anda.'); window.location='library.php';</script>";
+    // Tampilkan halaman sukses dengan kode transaksi
+    echo "<!DOCTYPE html>\n";
+    echo "<html lang='id'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    echo "<link rel='stylesheet' href='aset/style.css'>";
+    echo "<title>Transaksi Berhasil</title></head><body style='display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f5f7fb;'>";
+    echo "<div style='background:white;padding:24px 28px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08);max-width:420px;width:100%;text-align:center;font-family:Arial, sans-serif;'>";
+    echo "<div style='font-size:40px;color:#43e97b;margin-bottom:8px;'>&#10003;</div>";
+    echo "<h2 style='margin:0 0 8px 0;'>Transaksi Berhasil</h2>";
+    echo "<p style='margin:0 0 16px 0;color:#555;'>Kode Transaksi Anda:</p>";
+    echo "<div style='font-size:20px;font-weight:bold;color:#1f2d3d;margin-bottom:16px;'>$kode_transaksi</div>";
+    echo "<p style='margin:0 0 18px 0;color:#666;'>Simpan kode ini untuk pengecekan di admin atau riwayat transaksi.</p>";
+    echo "<div style='display:flex;gap:10px;justify-content:center;flex-wrap:wrap;'>";
+    echo "<a href='library.php' class='btn btn-primary' style='padding:10px 16px;border-radius:8px;text-decoration:none;'>Lihat Library</a>";
+    echo "<a href='akun.php' class='btn' style='padding:10px 16px;border-radius:8px;border:1px solid #dcdcdc;text-decoration:none;color:#333;'>Riwayat Transaksi</a>";
+    echo "</div>";
+    echo "</div></body></html>";
+    exit;
 
 } catch (Exception $e) {
     // Jika ada error, batalkan semua perubahan

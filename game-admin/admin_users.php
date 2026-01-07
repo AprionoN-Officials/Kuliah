@@ -11,6 +11,35 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $message = "";
 $message_type = "";
 
+// TAMBAH USER
+if (isset($_POST['tambah'])) {
+    $username = trim(mysqli_real_escape_string($conn, $_POST['username'] ?? ''));
+    $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? 'user';
+    $saldo = floatval($_POST['saldo'] ?? 0);
+
+    if ($username === '' || $password === '') {
+        $message = "Username dan password wajib diisi.";
+        $message_type = "error";
+    } else {
+        $exists = mysqli_query($conn, "SELECT id FROM users WHERE username='$username' LIMIT 1");
+        if ($exists && mysqli_num_rows($exists) > 0) {
+            $message = "Username sudah dipakai.";
+            $message_type = "error";
+        } else {
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
+            $query = "INSERT INTO users (username, password, role, saldo) VALUES ('$username', '$hashed', '$role', $saldo)";
+            if (mysqli_query($conn, $query)) {
+                $message = "User baru berhasil ditambahkan.";
+                $message_type = "success";
+            } else {
+                $message = "Gagal menambahkan user.";
+                $message_type = "error";
+            }
+        }
+    }
+}
+
 // HAPUS USER
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
@@ -18,54 +47,67 @@ if (isset($_GET['delete'])) {
     $check_query = "SELECT role FROM users WHERE id = $id";
     $check_result = mysqli_query($conn, $check_query);
     $user_data = mysqli_fetch_assoc($check_result);
-    
-    if ($user_data['role'] === 'admin') {
+
+    if (!$user_data) {
+        $message = "User tidak ditemukan.";
+        $message_type = "error";
+    } elseif ($user_data['role'] === 'admin') {
         $message = "Tidak dapat menghapus akun admin!";
         $message_type = "error";
     } else {
-        $delete_query = "DELETE FROM users WHERE id = $id";
-        if (mysqli_query($conn, $delete_query)) {
-            $message = "User berhasil dihapus!";
+        // Bersihkan transaksi/library terlebih dahulu agar tidak gagal karena constraint
+        mysqli_begin_transaction($conn);
+
+        $ok_tx = mysqli_query($conn, "DELETE FROM transactions WHERE user_id = $id");
+        $ok_user = $ok_tx && mysqli_query($conn, "DELETE FROM users WHERE id = $id");
+
+        if ($ok_user) {
+            mysqli_commit($conn);
+            $message = "User dan library terkait berhasil dihapus!";
             $message_type = "success";
         } else {
+            mysqli_rollback($conn);
             $message = "Gagal menghapus user!";
             $message_type = "error";
         }
     }
 }
 
-// EDIT USER (UPDATE SALDO atau ROLE)
 if (isset($_POST['edit'])) {
     $id = intval($_POST['id']);
+    $username = trim(mysqli_real_escape_string($conn, $_POST['username'] ?? ''));
     $saldo = floatval($_POST['saldo']);
-    $role = mysqli_real_escape_string($conn, $_POST['role']);
-    
-    $query = "UPDATE users SET saldo=$saldo, role='$role' WHERE id=$id";
-    
-    if (mysqli_query($conn, $query)) {
-        $message = "User berhasil diupdate!";
-        $message_type = "success";
-    } else {
-        $message = "Gagal mengupdate user!";
+    $role = $_POST['role'];
+    $password = $_POST['password'];
+
+    if ($username === '') {
+        $message = "Username tidak boleh kosong.";
         $message_type = "error";
+    } else {
+        $exists = mysqli_query($conn, "SELECT id FROM users WHERE username='$username' AND id != $id LIMIT 1");
+        if ($exists && mysqli_num_rows($exists) > 0) {
+            $message = "Username sudah digunakan.";
+            $message_type = "error";
+        } else {
+            if (!empty($password)) {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $query = "UPDATE users SET username='$username', saldo=$saldo, role='$role', password='$hashed_password' WHERE id=$id";
+            } else {
+                $query = "UPDATE users SET username='$username', saldo=$saldo, role='$role' WHERE id=$id";
+            }
+
+            if (mysqli_query($conn, $query)) {
+                $message = "Data user berhasil diperbarui!";
+                $message_type = "success";
+            } else {
+                $message = "Gagal memperbarui user!";
+                $message_type = "error";
+            }
+        }
     }
 }
 
-// RESET PASSWORD
-if (isset($_POST['reset_password'])) {
-    $id = intval($_POST['user_id']);
-    $new_password = password_hash('12345678', PASSWORD_DEFAULT); // Default password
-    
-    $query = "UPDATE users SET password='$new_password' WHERE id=$id";
-    
-    if (mysqli_query($conn, $query)) {
-        $message = "Password berhasil direset menjadi '12345678'";
-        $message_type = "success";
-    } else {
-        $message = "Gagal mereset password!";
-        $message_type = "error";
-    }
-}
+
 
 // Ambil semua data users
 $users_query = "SELECT * FROM users ORDER BY id DESC";
@@ -194,6 +236,11 @@ $users_result = mysqli_query($conn, $users_query);
             <div class="welcome-text">
                 <h2>Manajemen User</h2>
             </div>
+            <div class="user-action">
+                <button class="btn btn-primary" onclick="openModal('addModal')">
+                    <i class="fas fa-user-plus"></i> Tambah User
+                </button>
+            </div>
         </header>
 
         <section>
@@ -231,10 +278,10 @@ $users_result = mysqli_query($conn, $users_query);
                                 <a href="javascript:void(0)" onclick='editUser(<?= json_encode($user) ?>)' class="btn-action btn-edit">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                
-                                <button onclick='resetPassword(<?= $user['id'] ?>)' class="btn-action btn-reset">
-                                    <i class="fas fa-key"></i> Reset PW
-                                </button>
+
+                                <a href="admin_library.php?user_id=<?= $user['id'] ?>" class="btn-action btn-reset">
+                                    <i class="fas fa-book-open"></i> Library
+                                </a>
                                 
                                 <?php if($user['role'] !== 'admin'): ?>
                                 <a href="?delete=<?= $user['id'] ?>" onclick="return confirm('Yakin hapus user ini?')" class="btn-action btn-delete">
@@ -259,7 +306,7 @@ $users_result = mysqli_query($conn, $users_query);
                 <input type="hidden" name="id" id="edit_id">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="edit_username" class="form-control" disabled>
+                    <input type="text" name="username" id="edit_username" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label>Role</label>
@@ -268,6 +315,11 @@ $users_result = mysqli_query($conn, $users_query);
                         <option value="admin">Admin</option>
                     </select>
                 </div>
+                 <div class="form-group">
+                    <label class="form-group">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah">
+                    <small class="text-muted">Isi hanya jika ingin mengganti password user ini.</small>
+                </div>
                 <div class="form-group">
                     <label>Saldo (Rp)</label>
                     <input type="number" name="saldo" id="edit_saldo" class="form-control" required>
@@ -275,22 +327,40 @@ $users_result = mysqli_query($conn, $users_query);
                 <button type="submit" name="edit" class="btn btn-primary">Update User</button>
             </form>
         </div>
+        
     </div>
 
-    <!-- Modal Reset Password -->
-    <div id="resetModal" class="modal">
+    <!-- Modal Tambah User -->
+    <div id="addModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('resetModal')">&times;</span>
-            <h2 style="margin-top: 0;">Reset Password</h2>
-            <p>Password user akan direset menjadi: <strong>12345678</strong></p>
-            <p>User dapat login dengan password default ini dan mengubahnya nanti.</p>
+            <span class="close" onclick="closeModal('addModal')">&times;</span>
+            <h2 style="margin-top: 0;">Tambah User Baru</h2>
             <form method="POST">
-                <input type="hidden" name="user_id" id="reset_user_id">
-                <button type="submit" name="reset_password" class="btn btn-primary">Ya, Reset Password</button>
-                <button type="button" onclick="closeModal('resetModal')" class="btn" style="background: #ccc;">Batal</button>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" class="form-control">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Saldo Awal (Rp)</label>
+                    <input type="number" name="saldo" class="form-control" value="0" min="0" step="0.01" required>
+                </div>
+                <button type="submit" name="tambah" class="btn btn-primary">Simpan User</button>
             </form>
         </div>
     </div>
+
+
 
     <script>
         function openModal(modalId) {
@@ -309,10 +379,6 @@ $users_result = mysqli_query($conn, $users_query);
             openModal('editModal');
         }
 
-        function resetPassword(userId) {
-            document.getElementById('reset_user_id').value = userId;
-            openModal('resetModal');
-        }
 
         // Close modal when clicking outside
         window.onclick = function(event) {

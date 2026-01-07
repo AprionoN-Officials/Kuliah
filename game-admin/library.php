@@ -16,9 +16,8 @@ if ($_SESSION['role'] === 'admin') {
 
 $user_id = $_SESSION['user_id'];
 
-// 2. QUERY PERBAIKAN (Hapus g.gambar)
-// Kita hanya mengambil Judul dan Genre dari tabel games
-$query = "SELECT t.*, g.judul, g.genre 
+// Ambil transaksi beserta info game (termasuk gambar)
+$query = "SELECT t.*, g.judul, g.genre, g.gambar 
           FROM transactions t 
           JOIN games g ON t.game_id = g.id 
           WHERE t.user_id = '$user_id' 
@@ -76,7 +75,6 @@ $result = mysqli_query($conn, $query);
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         
                         <?php
-                            // A. LOGIKA HITUNG SISA WAKTU
                             $status_label = "";
                             $badge_class = "";
                             $is_expired = false;
@@ -99,13 +97,24 @@ $result = mysqli_query($conn, $query);
                                 }
                             }
 
-                            // B. LOGIKA GAMBAR MANUAL (Tanpa kolom database)
-                            // "Elden Ring" -> "elden_ring.jpg"
-                            $nama_file = strtolower(str_replace(' ', '_', $row['judul'])) . ".jpg";
-                            $path = "aset/images/" . $nama_file;
-                            
-                            // Cek fisik file di folder
-                            $imgSrc = file_exists($path) ? $path : "aset/images/tes.png";
+                            $base_dir = __DIR__ . '/aset/images/';
+                            $base_url = 'aset/images/';
+                            $allowed_ext = ['jpg','jpeg','png','webp'];
+
+                            $imgSrc = $base_url . 'tes.png';
+                            $db_name = isset($row['gambar']) ? basename($row['gambar']) : '';
+                            if ($db_name && file_exists($base_dir . $db_name)) {
+                                $imgSrc = $base_url . $db_name;
+                            } else {
+                                $slug = strtolower(str_replace(' ', '_', $row['judul'] ?? ''));
+                                foreach ($allowed_ext as $ext) {
+                                    $cand = $slug . '.' . $ext;
+                                    if (file_exists($base_dir . $cand)) {
+                                        $imgSrc = $base_url . $cand;
+                                        break;
+                                    }
+                                }
+                            }
                         ?>
 
                         <div class="game-card <?= $is_expired ? 'card-expired' : '' ?>">
@@ -123,7 +132,7 @@ $result = mysqli_query($conn, $query);
 
                                 <?php if (!$is_expired): ?>
                                     <button class="btn btn-primary btn-block" style="margin-top: 15px;">
-                                        <i class="fas fa-play"></i> Mainkan
+                                        <i class="fas fa-bookmark"></i> Sudah Dimiliki
                                     </button>
                                 <?php else: ?>
                                     <a href="detail.php?id=<?= $row['game_id']; ?>" class="btn btn-block" style="margin-top: 15px; border: 1px solid #ccc;">

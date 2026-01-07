@@ -2,6 +2,38 @@
 session_start();
 include 'config/database.php';
 
+// Mode preview admin: admin boleh lihat, tapi tidak bisa memesan
+$preview_param = (($_GET['preview'] ?? null) === 'user') ? 'user' : null;
+$is_admin = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin';
+$is_preview = $is_admin && $preview_param !== null;
+
+function resolveGameImage($game) {
+    $base_dir = __DIR__ . '/aset/images/';
+    $base_url = 'aset/images/';
+    $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+
+    $db_name = isset($game['gambar']) ? basename($game['gambar']) : '';
+    if ($db_name && file_exists($base_dir . $db_name)) {
+        return $base_url . $db_name;
+    }
+
+    $slug = strtolower(str_replace(' ', '_', $game['judul'] ?? ''));
+    if ($slug) {
+        foreach ($allowed_ext as $ext) {
+            $candidate = $slug . '.' . $ext;
+            if (file_exists($base_dir . $candidate)) {
+                return $base_url . $candidate;
+            }
+        }
+    }
+
+    if (file_exists($base_dir . 'default.jpg')) {
+        return $base_url . 'default.jpg';
+    }
+
+    return $base_url . 'tes.png';
+}
+
 // 1. Cek apakah ada ID di URL?
 if (!isset($_GET['id'])) {
     header("Location: index.php");
@@ -23,6 +55,17 @@ if (!$game) {
 
 // Cek Login
 $is_logged_in = isset($_SESSION['user_id']);
+$can_order = $is_logged_in && !$is_preview;
+
+// Cek apakah user sudah memiliki permanen
+$has_permanent = false;
+if ($is_logged_in) {
+    $uid = $_SESSION['user_id'];
+    $owned_q = mysqli_query($conn, "SELECT id FROM transactions WHERE user_id='$uid' AND game_id='$id_game' AND status='permanent' LIMIT 1");
+    if ($owned_q && mysqli_num_rows($owned_q) > 0) {
+        $has_permanent = true;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,32 +76,48 @@ $is_logged_in = isset($_SESSION['user_id']);
     <title>Detail <?= htmlspecialchars($game['judul']); ?> - GameRent</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="aset/style.css">
+    <style>
+        .modal-confirm {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+    </style>
 </head>
 <body>
 
     <?php include 'aset/sidebar.php'; ?>
 
     <main class="main-content">
+
+        <?php if ($is_preview): ?>
+        <div class="alert" style="background:#e8f4ff;border:1px solid #b6d7ff;color:#0a3d62;margin-bottom:15px;">
+            Mode Preview Admin — pemesanan dinonaktifkan. <a href="admin_dashboard.php" style="color:#0a3d62;text-decoration:underline;">Kembali ke dashboard admin</a>
+        </div>
+        <?php endif; ?>
         
-        <a href="index.php" class="btn" style="margin-bottom: 20px; color: var(--text-grey);">
+        <a href="index.php<?= $is_preview ? '?preview=user' : '' ?>" class="btn" style="margin-bottom: 20px; color: var(--text-grey);">
             <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
 
         <div class="detail-container">
-            
             <div class="left-side">
                 <?php 
-                    // Logika Gambar (Mendukung berbagai ekstensi)
-                    $nama_dasar = strtolower(str_replace(' ', '_', $game['judul']));
-                    $ekstensi = ['jpg', 'jpeg', 'png', 'webp'];
-                    $imgSrc = "aset/images/tes.png"; // Default
-
-                    foreach ($ekstensi as $ext) {
-                        if (file_exists("aset/images/" . $nama_dasar . "." . $ext)) {
-                            $imgSrc = "aset/images/" . $nama_dasar . "." . $ext;
-                            break;
-                        }
-                    }
+                    $imgSrc = resolveGameImage($game);
                 ?>
                 <img src="<?= $imgSrc; ?>" class="detail-img" alt="Cover Game">
                 
@@ -92,10 +151,18 @@ $is_logged_in = isset($_SESSION['user_id']);
                 </div>
 
                 <div class="transaksi-form">
-                    <?php if ($is_logged_in): ?>
-                        
+                    <?php if ($is_preview): ?>
+                        <div style="text-align: center; padding: 20px; background: #e8f4ff; border-radius: 5px; color: #0a3d62;">
+                            <i class="fas fa-eye"></i> Ini hanya preview, pemesanan dinonaktifkan.
+                        </div>
+                    <?php elseif ($can_order): ?>
                         <?php if ($game['stok'] > 0): ?>
-                            <form action="proses.php" method="POST">
+                            <?php if ($has_permanent): ?>
+                                <div style="margin-bottom:12px; padding:12px; background:#fff7e6; border:1px solid #ffd591; border-radius:8px; color:#ad6800;">
+                                    Anda sudah memiliki game ini secara permanen. Lanjutkan jika tetap ingin sewa/beli lagi.
+                                </div>
+                            <?php endif; ?>
+                            <form id="trxForm" action="proses.php" method="POST">
                                 <input type="hidden" name="game_id" value="<?= $game['id']; ?>">
                                 
                                 <div class="form-group">
@@ -112,7 +179,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                     <small style="color: #888;">Biaya: Rp <span id="estimasiBiaya"><?= number_format($game['harga_sewa']); ?></span></small>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary btn-block" onclick="return confirm('Pastikan saldo Anda cukup. Lanjutkan?')">
+                                <button type="button" class="btn btn-primary btn-block" onclick="handleSubmitTransaksi()">
                                     <i class="fas fa-shopping-cart"></i> Proses Sekarang
                                 </button>
                             </form>
@@ -132,9 +199,24 @@ $is_logged_in = isset($_SESSION['user_id']);
             </div>
         </div>
 
+        <?php if ($can_order): ?>
+        <div id="warnModal" class="modal-confirm" onclick="if(event.target.id==='warnModal') cancelProceed();">
+            <div class="modal-box">
+                <h3 style="margin-top:0;">Anda sudah memiliki game ini</h3>
+                <p style="color:#555;">Game ini sudah dimiliki secara permanen. Tetap lanjut sewa/beli lagi?</p>
+                <div class="modal-actions">
+                    <button class="btn" style="background:#e0e0e0;" onclick="cancelProceed()">Batal</button>
+                    <button class="btn btn-primary" onclick="confirmProceed()">Lanjut</button>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
     </main>
 
     <script>
+        const hasPermanent = <?= $has_permanent ? 'true' : 'false' ?>;
+
         function cekTipe() {
             var tipe = document.getElementById("tipeSelect").value;
             var durasiBox = document.getElementById("durasiBox");
@@ -145,6 +227,23 @@ $is_logged_in = isset($_SESSION['user_id']);
             } else {
                 durasiBox.style.display = "block";
             }
+        }
+
+        function handleSubmitTransaksi() {
+            if (hasPermanent) {
+                document.getElementById('warnModal').style.display = 'flex';
+            } else {
+                document.getElementById('trxForm').submit();
+            }
+        }
+
+        function confirmProceed() {
+            document.getElementById('warnModal').style.display = 'none';
+            document.getElementById('trxForm').submit();
+        }
+
+        function cancelProceed() {
+            document.getElementById('warnModal').style.display = 'none';
         }
     </script>
 </body>
