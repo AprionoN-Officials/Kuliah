@@ -332,7 +332,7 @@ $games_result = mysqli_query($conn, $games_query);
                             <td><?= $game['durasi_default'] ?? 0 ?></td>
                             <td><?= $game['stok'] ?></td>
                             <td>
-                                <a href="javascript:void(0)" onclick='editGame(<?= json_encode($game) ?>)' class="btn-action btn-edit">
+                                <a href="javascript:void(0)" onclick='editGame(<?= htmlspecialchars(json_encode($game), ENT_QUOTES, "UTF-8") ?>)' class="btn-action btn-edit">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 <a href="?delete=<?= $game['id'] ?>" onclick="return confirm('Yakin hapus game ini?')" class="btn-action btn-delete">

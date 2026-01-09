@@ -30,7 +30,7 @@
             <i class="fas fa-ticket-alt"></i> Voucher Diskon
         </a>
 
-        <a href="../index.php?preview=user" class="menu-btn">
+        <a href="../user/dashboard.php?preview=user" class="menu-btn">
             <i class="fas fa-eye"></i> Preview Dashboard
         </a>
     </nav>

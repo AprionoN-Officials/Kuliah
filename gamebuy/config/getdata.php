@@ -27,3 +27,39 @@ function getUserSaldo($userId, $connection) {
     // Return 0 if the query preparation fails
     return 0;
 }
+
+function resolveGameImage($game) {
+    // Path directory fisik (untuk file_exists)
+    // __DIR__ adalah F:\...\config
+    $base_dir = __DIR__ . '/../aset/images/';
+    
+    // URL relatif untuk browser (asumsi dipanggil dari folder user/ atau admin/)
+    $base_url = '../aset/images/';
+    
+    $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
+
+    $db_name = isset($game['gambar']) ? basename($game['gambar']) : '';
+    
+    // 1. Cek file sesuai database
+    if ($db_name && file_exists($base_dir . $db_name)) {
+        return $base_url . $db_name;
+    }
+
+    // 2. Cek file berdasarkan Slug Judul (backup legacy)
+    $slug = strtolower(str_replace(' ', '_', $game['judul'] ?? ''));
+    if ($slug) {
+        foreach ($allowed_ext as $ext) {
+            $candidate = $slug . '.' . $ext;
+            if (file_exists($base_dir . $candidate)) {
+                return $base_url . $candidate;
+            }
+        }
+    }
+
+    // 3. Fallback Default
+    if (file_exists($base_dir . 'default.jpg')) {
+        return $base_url . 'default.jpg';
+    }
+
+    return $base_url . 'default.jpg';
+}

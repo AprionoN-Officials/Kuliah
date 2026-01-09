@@ -36,7 +36,13 @@ function clean_code($code) {
 }
 
 function clean_int($val) {
-    $num = (int)preg_replace('/[^0-9]/', '', (string)$val);
+    // Hapus desimal jika ada (Browser mungkin mengirim 10000.00)
+    $val = (string)$val;
+    if (strpos($val, '.') !== false) {
+        $val = explode('.', $val)[0];
+    }
+    // Hanya ambil angka
+    $num = (int)preg_replace('/[^0-9]/', '', $val);
     return max(0, $num);
 }
 

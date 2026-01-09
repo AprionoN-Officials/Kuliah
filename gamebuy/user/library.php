@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../config/database.php';
+include '../config/getdata.php';
 
 // 1. Cek Login (Halaman ini KHUSUS User)
 if (!isset($_SESSION['user_id'])) {
@@ -97,24 +98,7 @@ $result = mysqli_query($conn, $query);
                                 }
                             }
 
-                            $base_dir = __DIR__ . '/../aset/images/';
-                            $base_url = '../aset/images/';
-                            $allowed_ext = ['jpg','jpeg','png','webp'];
-
-                            $imgSrc = $base_url . 'tes.png';
-                            $db_name = isset($row['gambar']) ? basename($row['gambar']) : '';
-                            if ($db_name && file_exists($base_dir . $db_name)) {
-                                $imgSrc = $base_url . $db_name;
-                            } else {
-                                $slug = strtolower(str_replace(' ', '_', $row['judul'] ?? ''));
-                                foreach ($allowed_ext as $ext) {
-                                    $cand = $slug . '.' . $ext;
-                                    if (file_exists($base_dir . $cand)) {
-                                        $imgSrc = $base_url . $cand;
-                                        break;
-                                    }
-                                }
-                            }
+                            $imgSrc = resolveGameImage($row);
                         ?>
 
                         <div class="game-card <?= $is_expired ? 'card-expired' : '' ?>">

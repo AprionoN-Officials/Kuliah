@@ -3,33 +3,6 @@ session_start(); // Wajib paling atas
 include '../config/database.php';
 include '../config/getdata.php';
 
-function resolveGameImage($game) {
-    $base_dir = __DIR__ . '/../aset/images/';
-    $base_url = '../aset/images/';
-    $allowed_ext = ['jpg', 'jpeg', 'png', 'webp'];
-
-    $db_name = isset($game['gambar']) ? basename($game['gambar']) : '';
-    if ($db_name && file_exists($base_dir . $db_name)) {
-        return $base_url . $db_name;
-    }
-
-    $slug = strtolower(str_replace(' ', '_', $game['judul'] ?? ''));
-    if ($slug) {
-        foreach ($allowed_ext as $ext) {
-            $candidate = $slug . '.' . $ext;
-            if (file_exists($base_dir . $candidate)) {
-                return $base_url . $candidate;
-            }
-        }
-    }
-
-    if (file_exists($base_dir . 'default.jpg')) {
-        return $base_url . 'default.jpg';
-    }
-
-    return $base_url . 'tes.png';
-}
-
 // Mode preview untuk admin: ?preview=user
 $preview_param = (($_GET['preview'] ?? null) === 'user') ? 'user' : null;
 $is_admin = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'admin';
