@@ -1,0 +1,411 @@
+/* --- MODAL / POPUP STYLE --- */
+.modal-overlay {
+    display: none; /* Tersembunyi secara default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Latar belakang gelap transparan */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background: white;
+    width: 90%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.modal-title { font-size: 20px; font-weight: bold; color: var(--text-dark); }
+.close-modal { cursor: pointer; font-size: 24px; color: #aaa; transition: 0.2s; }
+.close-modal:hover { color: var(--danger); }
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed #eee;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--primary);
+}
+
+/* --- HALAMAN TOP UP --- */
+.saldo-card {
+    background: linear-gradient(135deg, var(--primary), #2980b9);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+}
+
+.saldo-amount { font-size: 36px; font-weight: bold; margin-top: 10px; }
+
+.topup-title { margin-bottom: 20px; font-weight: bold; color: var(--text-dark); }
+
+.nominal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.nominal-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%; /* Agar tombol memenuhi grid */
+}
+
+.nominal-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* --- HALAMAN DETAIL GAME --- */
+.detail-container {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Kiri (Gambar) lebih kecil dari Kanan (Info) */
+    gap: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.detail-img {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.detail-info h1 { font-size: 28px; margin-bottom: 10px; color: var(--text-dark); }
+.detail-genre { display: inline-block; background: #eee; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin-bottom: 20px; color: #666; }
+.detail-desc { color: #555; line-height: 1.6; margin-bottom: 20px; }
+
+.price-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.price-nominal { font-weight: bold; color: var(--primary); }
+
+.transaksi-form { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+.form-label { display: block; margin-bottom: 8px; font-weight: bold; }
+
+/* --- USER DROPDOWN MENU --- */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tampilan Logo Profil */
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.profile-trigger:hover {
+    background-color: #f1f1f1;
+}
+
+.profile-pic-box {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* Isi Menu Dropdown (Tersembunyi Awalnya) */
+.dropdown-menu {
+    display: none; /* Hilang secara default */
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 99;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+/* Tampilkan saat di-Hover (Disorot Mouse) */
+.user-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Style Link di dalam Dropdown */
+.dropdown-menu a {
+    color: var(--text-dark);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f9f9f9;
+    color: var(--primary);
+}
+
+.dropdown-menu a.logout-btn {
+    color: var(--danger); /* Merah untuk logout */
+}
+
+.dropdown-menu a.logout-btn:hover {
+    background-color: #fff5f5;
+}
+
+/* --- HALAMAN AUTH (LOGIN/REGISTER) --- */
+.auth-body {
+    background-color: var(--primary); /* Latar biru full */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-box {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-title { margin-bottom: 20px; color: var(--text-dark); }
+
+.form-group { margin-bottom: 15px; text-align: left; }
+.form-group label { display: block; margin-bottom: 5px; color: var(--text-grey); font-size: 14px; }
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+}
+.form-control:focus { border-color: var(--primary); }
+
+.link-alt { display: block; margin-top: 15px; font-size: 14px; color: var(--text-grey); }
+.link-alt a { color: var(--primary); font-weight: bold; }
+
+/* --- VARIABLES (Tema Warna Flat) --- */
+:root {
+    --bg-body: #F0F4F8;       /* Background Abu-Biru Muda */
+    --bg-sidebar: #FFFFFF;    /* Sidebar Putih */
+    --primary: #4A90E2;       /* Biru Utama */
+    --primary-hover: #357ABD; /* Biru Gelap (Hover) */
+    --text-dark: #2C3E50;     /* Teks Utama */
+    --text-grey: #95A5A6;     /* Teks Sekunder */
+    --border-color: #E1E8ED;  /* Garis Batas Tipis */
+    --danger: #e74c3c;        /* Warna Merah (misal tombol hapus/logout) */
+    --success: #2ecc71;       /* Warna Hijau */
+}
+
+/* --- RESET & GLOBAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-dark);
+    display: flex;
+    min-height: 100vh;
+}
+
+a { text-decoration: none; }
+
+/* --- COMPONENT: SIDEBAR --- */
+.sidebar {
+    width: 250px;
+    background-color: var(--bg-sidebar);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    position: fixed;
+    height: 100%;
+    z-index: 100;
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: var(--text-dark);
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.menu-btn i { width: 30px; color: var(--primary); }
+.menu-btn:hover, .menu-btn.active {
+    background-color: #EBF5FF;
+    color: var(--primary);
+}
+
+/* --- COMPONENT: MAIN CONTENT & HEADER --- */
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 30px;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.user-action { display: flex; align-items: center; gap: 15px; }
+
+.user-avatar {
+    font-size: 30px;
+    color: var(--text-grey);
+    cursor: pointer;
+}
+
+/* --- COMPONENT: BUTTONS --- */
+.btn {
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-primary { background-color: var(--primary); color: white; }
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+.btn-warning { background-color: #f39c12; color: white; }
+.btn-warning:hover { background-color: #e67e22; }
+
+.btn-danger { background-color: var(--danger); color: white; }
+.btn-danger:hover { background-color: #c0392b; }
+
+.btn-block { display: block; width: 100%; text-align: center; }
+
+/* --- COMPONENT: CARDS (Grid Game) --- */
+.section-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    border-left: 5px solid var(--primary);
+    padding-left: 10px;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.game-img { width: 100%; height: 140px; object-fit: cover; background: #eee; }
+.card-body { padding: 15px; }
+.game-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.game-genre { font-size: 12px; color: var(--text-grey); display: block; margin-bottom: 10px; }
+.price-tag { color: var(--primary); font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block; }
+
+
